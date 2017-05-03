@@ -23,7 +23,7 @@ public class MainFrame extends JFrame{
 		setLayout(null);
 		
 		loginPanel = new Login();
-		loginPanel.setLocation(d.width/2 - 200,d.height/2 -300);
+		loginPanel.setLocation(d.width/2-150,d.height/2-150);
 		add(loginPanel);
 		
 		setSize(d.width,d.height);
