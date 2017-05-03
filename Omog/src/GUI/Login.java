@@ -1,16 +1,21 @@
-package OmogGame;
+package GUI;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 
 public class Login extends JPanel {
+	private MainFrame mainFrame;
 	private JLabel labelId;
 	private JLabel labelPassword;
 	private JTextField inputId;
 	private JTextField inputPassword;
 	private JButton btnLogin;
 	private JButton btnSignup;
-	Login(){
+	Login(MainFrame mainFrame){
+		this.mainFrame = mainFrame;
 		init();
 	}
 	private void init(){
@@ -31,6 +36,8 @@ public class Login extends JPanel {
 		btnLogin.setBounds(180,80,80,25);
 		btnSignup = new JButton("Sign up");
 		btnSignup.setBounds(10,80, 100,25);
+	
+		btnLogin.addActionListener(new LoginActionListener());
 		
 		add(labelId);
 		add(inputId);
@@ -39,5 +46,17 @@ public class Login extends JPanel {
 		add(btnLogin);
 		add(btnSignup);
 		setSize(300,150);
+	}
+	public JButton getLoginButton(){
+		return btnLogin;
+	}
+	public JButton getSignButton(){
+		return btnSignup;
+	}
+	
+	class LoginActionListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			mainFrame.goWaitingRoom();
+		}
 	}
 }

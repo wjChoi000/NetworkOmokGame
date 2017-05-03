@@ -1,18 +1,22 @@
-package OmogGame;
+package GUI;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-import javax.swing.JFrame;
 
 public class MainFrame extends JFrame{
 	//get screen size
 	private Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+	
+	//panel
 	private Login loginPanel;
+	private Signup signPanel;
+	private BorderWaitingRoom borderW;
+	private BorderPlayGame borderP;
 	
 	MainFrame(){
 		init();
-		
 	}
 	
 	private void init(){
@@ -21,18 +25,33 @@ public class MainFrame extends JFrame{
 		
 		//layout
 		setLayout(null);
+	
+		loginPanel = new Login(this);
+		borderW  = new BorderWaitingRoom(this);
 		
-		loginPanel = new Login();
+		//add Login Panel
 		loginPanel.setLocation(d.width/2-150,d.height/2-150);
 		add(loginPanel);
 		
+		setResizable(false);
 		setSize(d.width,d.height);
 		setVisible(true);
 	}
 	
-	static public void main(String[] args){
-		MainFrame mp = new MainFrame();
+
+	public void goWaitingRoom(){
+		getContentPane().removeAll();
+		getContentPane().add(borderW);
+		revalidate();
+		repaint();
 	}
 	
-	
+	static public void main(String[] args){
+		MainFrame mp = new MainFrame();
+		
+	}
+	public Dimension getDimension(){
+		return this.d;
+	}
 }
+

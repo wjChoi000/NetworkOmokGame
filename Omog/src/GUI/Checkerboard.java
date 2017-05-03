@@ -1,4 +1,4 @@
-package OmogGame;
+package GUI;
 
 public class Checkerboard {
 
