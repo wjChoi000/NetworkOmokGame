@@ -1,5 +1,7 @@
 package GUI;
 
-public class Signup {
+import javax.swing.*;
+
+public class Signup extends JPanel {
 
 }

@@ -29,7 +29,7 @@ public class Login extends JPanel {
 		inputId.setBounds(100,10,160,25);
 		
 		labelPassword = new JLabel("PASSWORD");
-		labelPassword.setBounds(0,40,80,25);
+		labelPassword.setBounds(10,40,80,25);
 		inputPassword = new JTextField(20);
 		inputPassword.setBounds(100,40,160,25);
 		btnLogin = new JButton("LOGIN");
@@ -45,7 +45,10 @@ public class Login extends JPanel {
 		add(inputPassword);
 		add(btnLogin);
 		add(btnSignup);
+		
+		setBackground(Color.blue);
 		setSize(300,150);
+		//setPreferredSize(new Dimension(300,150));
 	}
 	public JButton getLoginButton(){
 		return btnLogin;

@@ -1,5 +1,5 @@
 package GUI;
 
-public class Checkerboard {
+public class BPCheckerboard {
 
 }
