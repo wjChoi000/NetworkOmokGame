@@ -16,6 +16,9 @@ public class User {
 		this.lose = lose;
 		this.draw = draw;
 	}
+	public User(){
+		
+	}
 	
 	
 	public String getId() {
