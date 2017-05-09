@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Chatting extends JPanel implements ActionListener {
+	
+	private JLabel labelName;
 	private JTextArea textArea;
 	private JTextField textField;
 	private JScrollPane scrollPane;
@@ -22,16 +24,18 @@ public class Chatting extends JPanel implements ActionListener {
 	private void init(){
 		setLayout(null);
 
-		
+		labelName = new JLabel("chatting");
 		textField = new JTextField();
 		textArea = new JTextArea();
 		scrollPane = new JScrollPane(textArea);
 		btnSend = new JButton("Send");
 		
-		scrollPane.setBounds(10,10,width-20,height-120);
+		labelName.setBounds(10,10,width-20, 25);
+		scrollPane.setBounds(10,45,width-20,height-100-55);
 		textField.setBounds(10,500, width -120,25);
 		btnSend.setBounds(300,500,90,25);
 		
+		add(labelName);
 		add(scrollPane);
 		add(textField);
 		add(btnSend);

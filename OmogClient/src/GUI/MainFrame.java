@@ -15,6 +15,7 @@ public class MainFrame extends JFrame{
 	private BorderWaitingRoom borderW;
 	private BorderPlayGame borderP;
 	
+	private BPCheckerboard checker;
 	MainFrame(){
 		init();
 	}
@@ -28,16 +29,24 @@ public class MainFrame extends JFrame{
 		loginPanel = new Login(this);
 		borderW  = new BorderWaitingRoom(this);
 		
-		Chatting chatting = new Chatting(d);
+		
 		//layout
 		setLayout(null);
 	
 		//add Login Panel
-		loginPanel.setLocation(d.width/2-150,d.height/2-150);
+		/*loginPanel.setLocation(d.width/2-150,d.height/2-150);
 		add(loginPanel);
+		*/
 		
-		/*hatting.setLocation(d.width/2-150,d.height/2-150);
-		add(chatting);*/
+		checker = new BPCheckerboard();
+		checker.setLocation(10, 10);
+		add(checker);
+		
+		/*
+		 * Chatting chatting = new Chatting(d);
+		 chatting.setLocation(d.width/2-150,d.height/2-150);
+		add(chatting);
+		*/
 		
 		pack();
 		setResizable(false);
