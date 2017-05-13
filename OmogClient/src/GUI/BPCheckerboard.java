@@ -13,38 +13,37 @@ import model.StoneArray;
 
 public class BPCheckerboard extends JPanel {
 	
-	private int m =100;
-	private int bgeb = 70;
-	private int w = m*2+bgeb*18;
-	private int h = w;
-	private int ovalSize = 14;
+	public static final int m =100;
+	public static final int bgeb = 30;
+	public static final int w = m*2+bgeb*18;
+	public static final int h = w;
+	
+	private int ovalSize = 10;
 	
 	private String currentPath = this.getClass().getResource("").getPath();
 	private String blackStonePath="image/blackStone.png";
-	private String whiteStonePath="image/WhiteStone.png";
+	private String whiteStonePath="image/whiteStone.png";
 	private ImageIcon blackStoneIcon = new ImageIcon(currentPath+blackStonePath);
 	private ImageIcon whiteStoneIcon = new ImageIcon(currentPath+whiteStonePath);
 	private Image blackStoneImage = blackStoneIcon.getImage();
 	private Image whiteStoneImage = whiteStoneIcon.getImage();
 	
+	private boolean startGame = false;
 	private int currentColor = StoneArray.BLACK_STONE;
 	private StoneArray stone;
 	private Vector<Point> whitePV = new Vector<Point>();
 	private Vector<Point> blackPV = new Vector<Point>();
 	
-	private Point p;
-	
 	BPCheckerboard(){
 		init();
 		
 	}
-	
-	int temp = 0;
-	
+
 	private void init(){
 		this.setLayout(null);
-		
 		stone = new StoneArray();
+		
+		startGame();
 		
 		this.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e){
@@ -66,17 +65,13 @@ public class BPCheckerboard extends JPanel {
 					int flag = stone.endGame();
 					if(flag !=0){
 						JOptionPane.showMessageDialog(null, "end Game." ,"end", JOptionPane.INFORMATION_MESSAGE);
-						stone = new StoneArray();
-						whitePV = new Vector<Point>();
-						blackPV = new Vector<Point>();
+						restart();
 					}
 				}
 			}
 		});
-		
 		this.setSize(w,h);
 	}
-
 
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
@@ -138,5 +133,14 @@ public class BPCheckerboard extends JPanel {
 		return null;
 		
 	}
+	
+	public void restart(){
+		stone = new StoneArray();
+		whitePV = new Vector<Point>();
+		blackPV = new Vector<Point>();
+		repaint();
+	}
+	public void startGame(){startGame=true;}
+	public void endGame(){startGame=false;}
 	
 }
