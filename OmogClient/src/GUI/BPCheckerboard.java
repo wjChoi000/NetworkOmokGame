@@ -81,7 +81,7 @@ public class BPCheckerboard extends JPanel {
 	
 		//draw checker 
 		Graphics2D g2 = (Graphics2D) g;
-        g2.setStroke(new BasicStroke(5));
+        g2.setStroke(new BasicStroke(4));
 		g2.setColor(Color.black);
 		
 		g2.drawLine(m, m+0*bgeb, m+bgeb*18, m+0*bgeb);
@@ -89,7 +89,7 @@ public class BPCheckerboard extends JPanel {
 		g2.drawLine(m+0*bgeb,m,m+0*bgeb,m+bgeb*18);
 		g2.drawLine(m+18*bgeb,m,m+18*bgeb,m+bgeb*18);
 
-        g2.setStroke(new BasicStroke(3));
+        g2.setStroke(new BasicStroke(2));
 		
 		for(int i =0; i<19; i++){
 			g2.drawLine(m, m+i*bgeb, m+bgeb*18, m+i*bgeb);
