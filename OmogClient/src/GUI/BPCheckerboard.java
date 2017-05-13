@@ -9,6 +9,7 @@ import javax.swing.*;
 
 import GUI.Login.LoginActionListener;
 import GUI.Login.SignupActionListener;
+import model.StoneArray;
 
 public class BPCheckerboard extends JPanel {
 	
@@ -16,7 +17,7 @@ public class BPCheckerboard extends JPanel {
 	private int bgeb = 70;
 	private int w = m*2+bgeb*18;
 	private int h = w;
-	int ovalSize = 14;
+	private int ovalSize = 14;
 	
 	private String currentPath = this.getClass().getResource("").getPath();
 	private String blackStonePath="image/blackStone.png";
@@ -25,6 +26,9 @@ public class BPCheckerboard extends JPanel {
 	private ImageIcon whiteStoneIcon = new ImageIcon(currentPath+whiteStonePath);
 	private Image blackStoneImage = blackStoneIcon.getImage();
 	private Image whiteStoneImage = whiteStoneIcon.getImage();
+	
+	private int currentColor = StoneArray.BLACK_STONE;
+	private StoneArray stone;
 	private Vector<Point> whitePV = new Vector<Point>();
 	private Vector<Point> blackPV = new Vector<Point>();
 	
@@ -39,16 +43,33 @@ public class BPCheckerboard extends JPanel {
 	
 	private void init(){
 		this.setLayout(null);
+		
+		stone = new StoneArray();
+		
 		this.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e){
 				Point p =putStonePoint(e.getPoint());
 				if(p != null){
-					if(temp%2 ==0)
+					if(currentColor == StoneArray.WHITE_STONE)
 						whitePV.add(p);
 					else
 						blackPV.add(p);
-					temp++;
+					
+					//change color
+					if(currentColor ==StoneArray.BLACK_STONE)
+						currentColor = StoneArray.WHITE_STONE;
+					else
+						currentColor = StoneArray.BLACK_STONE;
+					
 					repaint();
+					
+					int flag = stone.endGame();
+					if(flag !=0){
+						JOptionPane.showMessageDialog(null, "end Game." ,"end", JOptionPane.INFORMATION_MESSAGE);
+						stone = new StoneArray();
+						whitePV = new Vector<Point>();
+						blackPV = new Vector<Point>();
+					}
 				}
 			}
 		});
@@ -104,13 +125,17 @@ public class BPCheckerboard extends JPanel {
 		if(x >=start && x<=start+bgeb*19 && y>=start && y<=start+bgeb*19){
 			x = (x-start)/bgeb;
 			y = (y-start)/bgeb;
+			
+			if(stone.addStone(x, y, currentColor) == 0)
+				return null;
+			
 			Point result;	
 			result = new Point(start+bgeb*x,start+bgeb*y);
 			System.out.println(x+", " +y);
 			System.out.println(result.toString());
 			return result;
-		}else
-			return null;
+		}
+		return null;
 		
 	}
 	
