@@ -46,8 +46,8 @@ public class BPGameMenu extends JPanel {
 	private void init(){
 		setLayout(null);
 		
-		myInfo = new UserPanel("My information",new User("swelo","","wj",2,2,2));
-		youInfo = new UserPanel("Opposite info",new User("op","","op",10,0,0));
+		myInfo = new UserPanel("My information",new User("swelo","","wj",2,2,2),false);
+		youInfo = new UserPanel("Opposite info",new User("op","","op",10,0,0),false);
 		myInfo.setBounds(m, m, width-2*m, userProfileH);
 		youInfo.setBounds(m, m*2+userProfileH, width-2*m, userProfileH);
 		

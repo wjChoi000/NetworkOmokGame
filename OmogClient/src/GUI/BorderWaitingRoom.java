@@ -47,9 +47,5 @@ public class BorderWaitingRoom extends JPanel {
 		add(userPanel);
 		setSize(mainFrame.width,mainFrame.height);
 		
-		
-		
 	}
-	
-	
 }

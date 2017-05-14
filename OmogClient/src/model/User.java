@@ -58,5 +58,7 @@ public class User {
 		this.draw = draw;
 	}
 	
-	
+	public String toStringRating(){
+		return win+" / "+lose+" / "+draw;
+	}
 }
