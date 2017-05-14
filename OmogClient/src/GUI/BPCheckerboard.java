@@ -13,7 +13,7 @@ import model.StoneArray;
 
 public class BPCheckerboard extends JPanel {
 	
-	public static final int m =100;
+	public static final int m =60;
 	public static final int bgeb = 30;
 	public static final int w = m*2+bgeb*18;
 	public static final int h = w;
@@ -28,24 +28,25 @@ public class BPCheckerboard extends JPanel {
 	private Image blackStoneImage = blackStoneIcon.getImage();
 	private Image whiteStoneImage = whiteStoneIcon.getImage();
 	
-	private boolean startGame = false;
 	private int currentColor = StoneArray.BLACK_STONE;
 	private StoneArray stone;
 	private Vector<Point> whitePV = new Vector<Point>();
 	private Vector<Point> blackPV = new Vector<Point>();
+
+	private MouseAdapter mouseAdapter;
+	private BPGameMenu menu;
 	
+	public void setBPGameMenu(BPGameMenu menu){this.menu = menu; }
 	BPCheckerboard(){
 		init();
 		
 	}
 
+	
 	private void init(){
 		this.setLayout(null);
 		stone = new StoneArray();
-		
-		startGame();
-		
-		this.addMouseListener(new MouseAdapter() {
+		mouseAdapter =new MouseAdapter() {
 			public void mouseReleased(MouseEvent e){
 				Point p =putStonePoint(e.getPoint());
 				if(p != null){
@@ -65,14 +66,21 @@ public class BPCheckerboard extends JPanel {
 					int flag = stone.endGame();
 					if(flag !=0){
 						JOptionPane.showMessageDialog(null, "end Game." ,"end", JOptionPane.INFORMATION_MESSAGE);
-						restart();
+						endGame();
+						menu.btnPanelEndGame();
 					}
 				}
 			}
-		});
+		};
 		this.setSize(w,h);
 	}
+	public void addListener(){
 
+		this.addMouseListener(mouseAdapter);
+	}
+	public void removeListener(){
+		this.removeMouseListener(mouseAdapter);
+	}
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		//set background
@@ -134,13 +142,15 @@ public class BPCheckerboard extends JPanel {
 		
 	}
 	
-	public void restart(){
+	public void startGame(){
 		stone = new StoneArray();
 		whitePV = new Vector<Point>();
 		blackPV = new Vector<Point>();
 		repaint();
+		addListener();
+		}
+	public void endGame(){
+		removeListener();
 	}
-	public void startGame(){startGame=true;}
-	public void endGame(){startGame=false;}
 	
 }

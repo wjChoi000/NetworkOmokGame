@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import model.User;
+
 
 public class MainFrame extends JFrame{
 	//get screen size
@@ -16,41 +18,49 @@ public class MainFrame extends JFrame{
 	private BorderPlayGame borderP;
 	
 	private BPCheckerboard checker;
+	
+	private User user = new User("swelo12","","wj",1,1,1);
+	
 	MainFrame(){
 		init();
 	}
+	
+	
+	public static final int checkerWidth = BPCheckerboard.w;
+	public static final int height=BPCheckerboard.h;
+	public static final int chattingWidth = 200;
+	public static final int chattingHeight = 300;
+	public static final int userProfileHeight = height-chattingHeight;
+	public static final int width = checkerWidth+chattingWidth;
+	public static final int m =5;
 	
 	private void init(){
 		setTitle("OmogGame");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
 		//init variable
-		d= new Dimension(GetScreenWorkingWidth(),GetScreenWorkingHeight());
+		d = new Dimension(width, height);
+		//d= new Dimension(GetScreenWorkingWidth(),GetScreenWorkingHeight());
 		loginPanel = new Login(this);
-		borderW  = new BorderWaitingRoom(this);
+		loginPanel.setLocation(d.width/2-150,d.height/2-150);
+
+		/*borderW  = new BorderWaitingRoom(this);
+		borderW.setLocation(0,0);
 		
+		borderP = new BorderPlayGame(this);
+		borderP.setLocation(0,0);
 		
+		*/
 		//layout
 		setLayout(null);
 	
 		//add Login Panel
-		/*loginPanel.setLocation(d.width/2-150,d.height/2-150);
+		
 		add(loginPanel);
-		*/
-		
-		checker = new BPCheckerboard();
-		checker.setLocation(10, 10);
-		add(checker);
-		
-		/*
-		 * Chatting chatting = new Chatting(d);
-		 chatting.setLocation(d.width/2-150,d.height/2-150);
-		add(chatting);
-		*/
 		
 		pack();
 		setResizable(false);
-		setSize(d.width,d.height);
+		setSize(width+5,height+70);
 		setVisible(true);
 	}
 	
@@ -58,6 +68,9 @@ public class MainFrame extends JFrame{
 	 *  move page 
 	 */
 	public void goWaitingRoom(){
+		borderW  = new BorderWaitingRoom(this);
+		borderW.setLocation(0,0);
+		
 		getContentPane().removeAll();
 		getContentPane().add(borderW);
 		revalidate();
@@ -70,12 +83,18 @@ public class MainFrame extends JFrame{
 		repaint();
 	}
 	public void goLogin(){
+		loginPanel = new Login(this);
+		loginPanel.setLocation(d.width/2-150,d.height/2-150);
+
 		getContentPane().removeAll();
 		getContentPane().add(loginPanel);
 		revalidate();
 		repaint();
 	}
 	public void goPlayGame(){
+		borderP = new BorderPlayGame(this);
+		borderP.setLocation(0,0);
+
 		getContentPane().removeAll();
 		getContentPane().add(borderP);
 		revalidate();
@@ -85,10 +104,18 @@ public class MainFrame extends JFrame{
 	/*
 	 * get, set method
 	 */
+	/*
 	public Dimension getDimension(){
 		return this.d;
 	}
-	
+	public static int GetScreenWorkingWidth() {
+	    return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
+	}
+
+	public static int GetScreenWorkingHeight() {
+	    return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+	}
+*/	
 	
 	/*
 	 * start application
@@ -97,12 +124,13 @@ public class MainFrame extends JFrame{
 		MainFrame mp = new MainFrame();
 		
 	}
-	public static int GetScreenWorkingWidth() {
-	    return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
+
+	public User getUser() {
+		return user;
 	}
 
-	public static int GetScreenWorkingHeight() {
-	    return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+	public void setUser(User user) {
+		this.user = user;
 	}
 }
 

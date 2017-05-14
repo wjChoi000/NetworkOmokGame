@@ -84,7 +84,7 @@ public class Signup extends JDialog {
 		add(btnSubmit);
 		add(btnCancel);
 		
-		this.setLocation(mf.GetScreenWorkingWidth()/2 -width/2, mf.GetScreenWorkingHeight()/2-height/2);
+		this.setLocation(mf.width/2 -width/2, mf.height/2-height/2);
 		
 		this.setSize(width, height);
 		this.setModal(true);

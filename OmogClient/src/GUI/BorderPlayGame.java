@@ -8,7 +8,7 @@ import javax.swing.*;
 public class BorderPlayGame extends JPanel {
 	private MainFrame mainFrame;
 	private BorderLayout bl;
-	private BPCheckerboard chekerPanel;
+	private BPCheckerboard checkerPanel;
 	private Chatting chatPanel;
 	private BPGameMenu menuPanel;
 	
@@ -19,17 +19,20 @@ public class BorderPlayGame extends JPanel {
 	private void init(){
 		bl = new BorderLayout();
 		
-		setLayout(bl);
-		add(new JButton("checker"), BorderLayout.CENTER);
+		setLayout(null);
+		checkerPanel = new BPCheckerboard();
+		checkerPanel.setLocation(0,0);
+		add(checkerPanel);
 		
-		JSplitPane rightPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		rightPane.setContinuousLayout(true);
-		rightPane.setTopComponent(new JButton("user profile"));
-		rightPane.setBottomComponent(new JButton("chatting"));
+		chatPanel = new Chatting(mainFrame);
+		chatPanel.setLocation(BPCheckerboard.w,BPCheckerboard.h-MainFrame.chattingHeight);
+		add(chatPanel);
 		
-		add(rightPane, BorderLayout.EAST);
-
-		Dimension d = mainFrame.getDimension();
-		setSize(d.width,d.height);
+		menuPanel = new BPGameMenu(mainFrame,checkerPanel);
+		menuPanel.setLocation(BPCheckerboard.w,0);
+		add(menuPanel);
+		checkerPanel.setBPGameMenu(menuPanel);
+		
+		setSize(mainFrame.width,mainFrame.height);
 	}
 }

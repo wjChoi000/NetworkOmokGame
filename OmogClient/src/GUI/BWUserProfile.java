@@ -15,10 +15,6 @@ import javax.swing.JTextField;
 import model.User;
 
 public class BWUserProfile extends JPanel{
-	private Dimension d;
-	private int width;
-	private int height;
-	
 	//user information
 	private JPanel userPanel;
 	private JLabel labelID;
@@ -35,45 +31,66 @@ public class BWUserProfile extends JPanel{
 	
 	private User user;
 	
+	private MainFrame mf;
 	private BWWaitingRoom waitPanel;
-	BWUserProfile(Dimension d, BWWaitingRoom waitPanel){
+	
+	private int width = MainFrame.chattingWidth;
+	private int height = MainFrame.userProfileHeight;
+	private int m = MainFrame.m;
+	private int labelWidth =70;
+	private int inputWidth = 100;
+	private int h=25;	
+	private int btnMakeRoomH = 50;
+	private int userProfileH = h*4+m*5;	
+	private int usersListH = height -userProfileH - btnMakeRoomH;
+	private int  currentH =0;
+	
+	
+	BWUserProfile(MainFrame mf, BWWaitingRoom waitPanel){
 		this.waitPanel = waitPanel;
-		this.d = d;
+		this.mf = mf;
 		init();
 	}
+	
+	
 	private void init(){
 
-		width = 400;
-		height = d.height-600;
+
 		
 		setLayout(null);
 		
-		AddUserPanel();
+		//AddUserPanel();
+		userPanel =new UserPanel("My Information",new User("wj@naver.com"," ","wj",1,1,1));
+		userPanel.setBounds(m, m, width-2, userPanel.getHeight());
+		add(userPanel);
+		currentH = m+userPanel.getHeight();
+		
 		AddUsersList();
 		
 		btnMakeRoom = new JButton("MAKE ROOM");
-		btnMakeRoom.setBounds(200, height-100, 180, 80);
+		btnMakeRoom.setBounds(m, currentH, width-2*m, btnMakeRoomH-m);
 		add(btnMakeRoom);
 		
 		setSize(width,height);
 		
 		btnMakeRoom.addActionListener(new ActionListenerMakeRoom());
+		
 	}
-	
 	void AddUsersList(){
 		
 		usersList = new JPanel();
 		usersList.add(new JButton("hi"));
-		usersList.setPreferredSize(new Dimension(width-40,height-220));
+		usersList.setPreferredSize(new Dimension(width-4*m,usersListH-2*m));
 		usersList.setBackground(Color.WHITE);
 		scrollPane = new JScrollPane(usersList);
-		scrollPane.setBounds(10,130,width-20,height-250);
-
+		scrollPane.setBounds(m,currentH,width-2*m,usersListH-2*m);
+		currentH = currentH +usersListH;
+		
 		add(scrollPane);
 	}
 	
-	void AddUserPanel(){
 
+	void AddUserPanel(){
 		//user information
 		userPanel = new JPanel();
 		userPanel.setLayout(null);
@@ -86,13 +103,15 @@ public class BWUserProfile extends JPanel{
 		labelID = new JLabel("ID");
 		labelName = new JLabel("Name");
 	
-		labelID.setBounds(10,10,80,25);
-		inputID.setBounds(100,10, width-100,25);
+
 		
-		labelName.setBounds(10,50,80,25);
-		inputName.setBounds(100,50,width-100,25);
+		labelID.setBounds(m,m,labelWidth,h);
+		inputID.setBounds(labelWidth+2*m,m, width-labelWidth-2*m,h);
 		
-		inputHistory.setBounds(10,90,width-20,25);
+		labelName.setBounds(m,h+2*m,labelWidth,h);
+		inputName.setBounds(labelWidth+2*m,h+2*m,width-labelWidth-2*m,h);
+		
+		inputHistory.setBounds(m,h*2+3*m,width-2*m,h);
 		
 		add(labelID);
 		add(labelName);
@@ -100,7 +119,7 @@ public class BWUserProfile extends JPanel{
 		add(inputName);
 		add(inputHistory);
 		
-		userPanel.setSize(width,100);
+		userPanel.setSize(width,h*3+m*4);
 		userPanel.setLocation(0,0);
 		add(userPanel);
 	
@@ -111,6 +130,7 @@ public class BWUserProfile extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			waitPanel.makeRoom("makeroom click");
+			mf.goPlayGame();
 		}
 		
 	}
