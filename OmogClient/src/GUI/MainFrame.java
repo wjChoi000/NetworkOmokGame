@@ -16,8 +16,8 @@ public class MainFrame extends JFrame{
 	private Signup signupPanel;
 	private BorderWaitingRoom borderW;
 	private BorderPlayGame borderP;
-	
 	private BPCheckerboard checker;
+	private DialogConfirmClose dialogClose;
 	
 	private User user = new User("swelo12","","wj",1,1,1);
 	
@@ -28,7 +28,7 @@ public class MainFrame extends JFrame{
 	
 	public static final int checkerWidth = BPCheckerboard.w;
 	public static final int height=BPCheckerboard.h;
-	public static final int chattingWidth = 200;
+	public static final int chattingWidth = 300;
 	public static final int chattingHeight = 300;
 	public static final int userProfileHeight = height-chattingHeight;
 	public static final int width = checkerWidth+chattingWidth;
@@ -40,28 +40,27 @@ public class MainFrame extends JFrame{
 	
 		//init variable
 		d = new Dimension(width, height);
-		//d= new Dimension(GetScreenWorkingWidth(),GetScreenWorkingHeight());
 		loginPanel = new Login(this);
 		loginPanel.setLocation(d.width/2-150,d.height/2-150);
-
-		/*borderW  = new BorderWaitingRoom(this);
-		borderW.setLocation(0,0);
-		
-		borderP = new BorderPlayGame(this);
-		borderP.setLocation(0,0);
-		
-		*/
+	
 		//layout
 		setLayout(null);
-	
-		//add Login Panel
-		
 		add(loginPanel);
 		
 		pack();
 		setResizable(false);
 		setSize(width+5,height+70);
 		setVisible(true);
+		
+		//close event
+		/*dialogClose = new DialogConfirmClose(this);
+		addWindowListener( new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent we) {
+				dialogClose.setVisible(true);
+				
+			}
+		} );*/
 	}
 	
 	/*

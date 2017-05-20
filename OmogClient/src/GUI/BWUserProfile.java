@@ -21,6 +21,9 @@ import model.User;
 
 public class BWUserProfile extends JPanel{
 	//user information
+	private MainFrame mf;
+	private BWWaitingRoom waitPanel;
+	
 	private UserPanel userPanel;
 	private JLabel labelID;
 	private JLabel labelName;
@@ -32,14 +35,15 @@ public class BWUserProfile extends JPanel{
 	private JButton btnMakeRoom;
 	private JButton btnLogout;
 	
+	private DialogMakeRoom dialogMakeRoom;
 	private JPanel usersList;
 	private JScrollPane scrollPane;
 	
 	private User user;
 	
-	private MainFrame mf;
-	private BWWaitingRoom waitPanel;
 	
+	
+	//-----------------------------------------------------------------------
 	private int width = MainFrame.chattingWidth;
 	private int height = MainFrame.userProfileHeight;
 	private int m = MainFrame.m;
@@ -94,6 +98,7 @@ public class BWUserProfile extends JPanel{
 		
 		setSize(width,height);
 		
+		dialogMakeRoom = new DialogMakeRoom(mf);
 		btnMakeRoom.addActionListener(new ActionListenerMakeRoom());
 		updateUserList();
 		
@@ -217,8 +222,9 @@ public class BWUserProfile extends JPanel{
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			waitPanel.updatRoomList();
-			mf.goPlayGame();
+			dialogMakeRoom.setVisible(true);
+			//waitPanel.updatRoomList();
+			//mf.goPlayGame();
 		}
 		
 	}
