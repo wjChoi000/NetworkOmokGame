@@ -12,6 +12,9 @@ int InsertUser(char* id, char* password, char* name, int win, int lose, int draw
         fprintf(stderr,"insert user, sql connection error: %s\n",mysql_error(&conn));
         return 0;
     }
+    mysql_options(&conn, MYSQL_SET_CHARSET_NAME, "utf8");
+    mysql_options(&conn, MYSQL_INIT_COMMAND, "SET NAMES utf8");
+    
     char query[255];
     sprintf(query,"insert into user values ('%s', '%s', '%s', %d, %d,%d)",id,password,name,win,lose,draw);
 
@@ -126,32 +129,10 @@ int LoseUserByID(char* id){
 void printUser(User* user){
 	printf("%s %s %s %d %d %d\n",user->id, user->password, user->name, user->win, user->draw, user->lose);
 }
-int main(){
-
-	User* user = SearchUserByID("d");
-	if(user !=NULL){	
-		printUser(user);
-	}
-	else
-		printf("no search\n");
-}
-
-
 /*
-   init
-
-mysql_init(&conn);
-connection = mysql_real_connect(&coon,DB_HOST, DB_USER,DB_PASS,DB_NAME,DB_PORT,(char *)NULL,0);
-if(connection == NULL){
-   fprintf(stderr,"insert user, sql connection error: %s\n",mysql_error(&conn));
-   return NULL;
+int main(){
+    InsertUser("ssss","1234","가나",0,0,0);
+    // User* u = SearchUserByID("dd");
+    //printUser(u);
 }
-                 
-query_stat = mysql_query(connection,query);
-         
-if(query_stat!=0){
-    fprintf(stderr,"insert user, Mysql qyery error: %s", mysql_error(&conn));
-    return NULL;
-}
-mysql_close(connection);
 */

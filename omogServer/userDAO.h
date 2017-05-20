@@ -3,6 +3,7 @@
 
 
 #include "/usr/include/mysql/mysql.h"
+//#include <mysql.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,5 +28,13 @@ MYSQL *connection=NULL, conn;
 MYSQL_RES   *sql_result;
 MYSQL_ROW   sql_row;
 int query_stat;
+
+User* createUser();
+int InsertUser(char* id, char* password, char* name, int win, int lose, int draw);
+User* SearchUserByID(char *id);
+int WinUserByID(char* id);
+int DrawUserByID(char* id);
+int LoseUserByID(char* id);
+
 
 #endif
