@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import Soket.ClientSocket;
 import model.User;
 
 
@@ -20,6 +21,8 @@ public class MainFrame extends JFrame{
 	private DialogConfirmClose dialogClose;
 	
 	private User user = new User("swelo12","","wj",1,1,1);
+	
+	private ClientSocket clientSocket;
 	
 	MainFrame(){
 		init();
@@ -51,6 +54,9 @@ public class MainFrame extends JFrame{
 		setResizable(false);
 		setSize(width+5,height+70);
 		setVisible(true);
+		
+		//Socket Programing
+		clientSocket = new ClientSocket();
 		
 		//close event
 		/*dialogClose = new DialogConfirmClose(this);
@@ -131,5 +137,10 @@ public class MainFrame extends JFrame{
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	public ClientSocket getClientSocket() {
+		return clientSocket;
+	}
+	
 }
 

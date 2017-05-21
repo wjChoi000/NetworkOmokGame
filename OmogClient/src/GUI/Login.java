@@ -6,6 +6,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import Soket.ClientMsgProtocol;
+import Static.UtilSocketMode;
+
 public class Login extends JPanel {
 	private MainFrame mainFrame;
 	private JLabel labelId;
@@ -16,6 +19,10 @@ public class Login extends JPanel {
 	private JButton btnSignup;
 	
 	private Signup signupDialog;
+	
+	private ClientMsgProtocol sendMsg;
+	private ClientMsgProtocol receiveMsg;
+	
 	Login(MainFrame mainFrame){
 		this.mainFrame = mainFrame;
 		init();
@@ -72,11 +79,48 @@ public class Login extends JPanel {
 	
 	class LoginActionListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			
 			//network
 			//id & password check
+			boolean validity =true;
+			String errorMsg = null;
 			
-			mainFrame.goWaitingRoom();
+			String id = inputId.getText().trim();
+			String pw = inputPassword.getText().trim();
+			
+			if(id.length() >20 || pw.length()>20){
+				validity = false;
+				errorMsg = "Enter text length under 20!";
+			}
+			if(validity){
+				byte[] b =null;
+				
+				try{
+					byte[] bid = id.getBytes("UTF-8");
+					byte[] bpw = pw.getBytes("UTF-8");
+					
+				}catch(Exception ex){
+					ex.printStackTrace();
+				}
+				
+				sendMsg = new ClientMsgProtocol(UtilSocketMode.LOGIN_MOD,0,0, b.length,b);
+				receiveMsg =mainFrame.getClientSocket().sendMessage(sendMsg);
+				System.out.print("read : ");
+				receiveMsg.print();
+				if(receiveMsg.getMod() == UtilSocketMode.LOGIN_MOD){
+					mainFrame.goWaitingRoom();				
+					return;
+				}
+				else{
+					errorMsg = "Wrong id or password!";
+					validity =false;
+				}
+			}
+			
+			if(!validity ){
+				JOptionPane.showMessageDialog(null, errorMsg ,"error", JOptionPane.INFORMATION_MESSAGE);
+			}
 		}
+
+	
 	}
 }

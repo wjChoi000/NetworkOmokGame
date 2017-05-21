@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import org.omg.CORBA.portable.InputStream;
+//port org.omg.CORBA.portable.InputStream;
 
 import model.User;
 
@@ -32,6 +32,7 @@ public class Test {
 			//write
 			OutputStream os = (OutputStream) socket.getOutputStream();
 			User user = new User("swelo","1234","원준",0,0,0);
+			byte[] b = user.getName().getBytes("UTF-8");
 			os.write(user.getName().getBytes("UTF-8"));
 			//read
 			BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());

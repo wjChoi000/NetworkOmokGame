@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import Soket.ClientMsgProtocol;
+
 
 public class Signup extends JDialog {
 	
@@ -33,6 +35,9 @@ public class Signup extends JDialog {
 	private int labelWidth =80;
 	private int inputWidth = 160;
 	private int labelHeight = 25;
+	
+	private ClientMsgProtocol msg;
+	
 	Signup(MainFrame mf){
 		this.mf = mf;
 		width = Margin*2+labelWidth+inputWidth+geb;
