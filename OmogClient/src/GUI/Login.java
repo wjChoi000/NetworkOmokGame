@@ -57,7 +57,6 @@ public class Login extends JPanel {
 		add(btnLogin);
 		add(btnSignup);
 		
-		setBackground(Color.red);
 		setSize(270,120);
 		//setPreferredSize(new Dimension(300,150));
 		
@@ -79,7 +78,7 @@ public class Login extends JPanel {
 	
 	class LoginActionListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-			//network
+/*			//network
 			//id & password check
 			boolean validity =true;
 			String errorMsg = null;
@@ -119,6 +118,8 @@ public class Login extends JPanel {
 			if(!validity ){
 				JOptionPane.showMessageDialog(null, errorMsg ,"error", JOptionPane.INFORMATION_MESSAGE);
 			}
+*/			mainFrame.goWaitingRoom();				
+
 		}
 
 	
