@@ -78,7 +78,7 @@ public class Login extends JPanel {
 	
 	class LoginActionListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
-/*			//network
+		//network
 			//id & password check
 			boolean validity =true;
 			String errorMsg = null;
@@ -92,16 +92,17 @@ public class Login extends JPanel {
 			}
 			if(validity){
 				byte[] b =null;
-				
+				byte[] bid= null;
+				byte[] bpw = null;
 				try{
-					byte[] bid = id.getBytes("UTF-8");
-					byte[] bpw = pw.getBytes("UTF-8");
+					bid = id.getBytes("UTF-8");
+					bpw = pw.getBytes("UTF-8");
 					
 				}catch(Exception ex){
 					ex.printStackTrace();
 				}
 				
-				sendMsg = new ClientMsgProtocol(UtilSocketMode.LOGIN_MOD,0,0, b.length,b);
+				sendMsg = new ClientMsgProtocol(UtilSocketMode.LOGIN_MOD,0,0, bid.length,bid);
 				receiveMsg =mainFrame.getClientSocket().sendMessage(sendMsg);
 				System.out.print("read : ");
 				receiveMsg.print();
@@ -117,8 +118,7 @@ public class Login extends JPanel {
 			
 			if(!validity ){
 				JOptionPane.showMessageDialog(null, errorMsg ,"error", JOptionPane.INFORMATION_MESSAGE);
-			}
-*/			mainFrame.goWaitingRoom();				
+			}				
 
 		}
 
