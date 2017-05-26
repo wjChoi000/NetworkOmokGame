@@ -96,7 +96,7 @@ public class Login extends JPanel {
 				mainFrame.getClientMsgProtocol().setMsgByteSize(b.length);
 				mainFrame.getClientMsgProtocol().setMsg(b);
 				
-				int result = mainFrame.getClientSocket().sendMessage(mainFrame.getClientMsgProtocol());
+				int result = mainFrame.getClientSocket().sendLoginMessage(mainFrame.getClientMsgProtocol());
 				System.out.print("read : "+result);
 				
 				if(result == UtilSocketMode.LOGIN_MOD){
