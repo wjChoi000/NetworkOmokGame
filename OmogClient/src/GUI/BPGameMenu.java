@@ -5,8 +5,13 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import Soket.ClientMsgProtocol;
+import Soket.ClientSocket;
+import Static.UtilLayout;
+import Static.UtilSocketMode;
 import model.User;
 
 public class BPGameMenu extends JPanel {
@@ -31,23 +36,35 @@ public class BPGameMenu extends JPanel {
 	
 	private JPanel btnPanel;
 	private JButton btnExit;
-	private	JButton btnStart;
+	private JButton btnStart;
 	
 	private JButton btnDraw;
 	private JButton btnGiveup;
 	
+	//-------------------------------------------------
+	private final int WAIT =1;
+	private final int READY = 2;
+	private final int START = 3;
+	private int state;
 		
+	private ClientSocket socket;
+	private ClientMsgProtocol protocol;
 	BPGameMenu(MainFrame mf, BPCheckerboard checker){
 		this.mf = mf;
 		this.checker = checker;
+		socket = mf.getClientSocket();
+		protocol = mf.getClientMsgProtocol();
 		
 		init();
 	}
+	
+	private User opposite = new User("","","",0,0,0);
+	
 	private void init(){
 		setLayout(null);
 		
-		myInfo = new UserPanel("My information",new User("swelo","","wj",2,2,2),false);
-		youInfo = new UserPanel("Opposite info",new User("op","","op",10,0,0),false);
+		myInfo = new UserPanel("My information",mf.getUser(),false);
+		youInfo = new UserPanel("Opposite info",opposite,false);
 		myInfo.setBounds(m, m, width-2*m, userProfileH);
 		youInfo.setBounds(m, m*2+userProfileH, width-2*m, userProfileH);
 		
@@ -57,6 +74,15 @@ public class BPGameMenu extends JPanel {
 		
 		
 		setSize(width,height);
+	}
+	
+	private void updateUserPanel(){
+		
+		youInfo = new UserPanel("Opposite info",opposite,false);
+		youInfo.setBounds(m, m*2+userProfileH, width-2*m, userProfileH);
+		add(youInfo);
+		myInfo.updateUI();
+		youInfo.updateUI();
 	}
 	
 	private void btnPanelAdd(){
@@ -97,37 +123,107 @@ public class BPGameMenu extends JPanel {
 		btnPanel.revalidate();
 		btnPanel.repaint();
 	}
+	public void btnPanelReady(){
+		btnStart.setText("Ready");
+		state = READY;
+	}
+	public void btnPanelWait(){
+		btnStart.setText("Wait");
+		state = WAIT;
+	}
+	private int mod;
 	
-		
 	class ActionListenerStartGame implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			checker.startGame();
-			btnPanelStartGame();
+			
+			if(state == READY){
+				mod=UtilSocketMode.READY_GAME_MOD;
+			}
+			else if(state == WAIT){
+				mod = UtilSocketMode.WAIT_GAME_MOD;
+			}
+			else{
+				System.out.println("startGame btn error");
+				return;
+			}
+			protocol.setMod(mod);
+			
+			int result = socket.sendMessage(protocol);
+			System.out.print("read : "+result);
+			if(result != 0){
+				if(state == READY){
+					btnPanelReady();
+				}
+				else if(state == WAIT){
+					btnPanelWait();
+				}	
+			}
+			else{
+				System.out.println("startGame btn socket error");
+				return;
+			}
+			//checker.startGame();
+			//btnPanelStartGame();
 		}
 	}
 	class ActionListenerExit implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			mf.goWaitingRoom();
+			mod = UtilSocketMode.GO_OUT_ROOM_MOD ;
+			protocol.setMod(mod);
+			int result = mf.getClientSocket().sendMessage(protocol);
+			System.out.print("read : "+result);
+			if(result != 0){
+				mf.goWaitingRoom();	
+			}
+			else{
+				System.out.println("startGame btn socket error");
+			}
+			return;
 		}
 	}
 	class ActionListenerDraw implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			checker.endGame();
-			btnPanelEndGame();
+			protocol.setMod(UtilSocketMode.DRAW_REQUEST_MOD);
+			int result = mf.getClientSocket().sendMessage(protocol);
+			System.out.print("read : "+result);
+			//draw accept
+			if(result == 1){
+				JOptionPane.showMessageDialog(null, "draw" ,"accept", JOptionPane.INFORMATION_MESSAGE);
+				checker.endGame();
+				btnPanelEndGame();
+			}
+			else if(result == -1){
+				JOptionPane.showMessageDialog(null, "rejected" ,"rejected", JOptionPane.INFORMATION_MESSAGE);
+				
+			}
+			else{
+				System.out.println("draw btn socket error");
+			}
+			return;
 		}
 	}
 	class ActionListenerGiveup implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			checker.endGame();
-			btnPanelEndGame();
+			protocol.setMod(UtilSocketMode.DROP_OUT_GAME_MOD);
+			int result = mf.getClientSocket().sendMessage(protocol);
+			System.out.print("read : "+result);
+			if(result == 1){
+				JOptionPane.showMessageDialog(null, "give up" ,"give up", JOptionPane.INFORMATION_MESSAGE);
+				checker.endGame();
+				btnPanelEndGame();
+			}
+			else{
+				System.out.println("give up btn socket error");
+			}
+			return;
 		}
 	}
 }

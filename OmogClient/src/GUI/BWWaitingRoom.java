@@ -35,17 +35,16 @@ public class BWWaitingRoom extends JPanel{
 	
 	private int titleHeight=25;
 	private ArrayList<String> roomList;
+	
 	BWWaitingRoom(MainFrame mf){
 		this.mf = mf;
 		roomList = new ArrayList<String>();
-		for(int i=0; i<15; i++){
-			roomList.add("room "+i);
-		}
-		init();
 		
+		createAndShowGUI();
+		getRoomList();
 		updatRoomList();
 	}
-	private void init(){
+	private void createAndShowGUI(){
 		setLayout(null);
 		
 		JLabel title = new JLabel("title");
@@ -64,6 +63,9 @@ public class BWWaitingRoom extends JPanel{
 		
 	}
 	
+	private void getRoomList(){
+		
+	}
 	public void updatRoomList(){
 		int ch =0;
 		for(String item: roomList){

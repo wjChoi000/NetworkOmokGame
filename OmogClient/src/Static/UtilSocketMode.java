@@ -14,10 +14,11 @@ public class UtilSocketMode {
 	public static final int UPDATEROOM_MOD=24;
 	public static final int UPDATEUSERS_MOD=25;
 	public static final int LOGOUT_MOD=26;
+	public static final int GETROOM_DOM=27;
 	
 	public static final int READY_GAME_MOD=31;
-	public static final int UNREADY_GAME_MOD =32;
-	public static final int GOOUT_ROOM_MOD =33;
+	public static final int WAIT_GAME_MOD =32;
+	public static final int GO_OUT_ROOM_MOD =33;
 	public static final int START_GAME_MOD = 34;
 	public static final int DRAW_REQUEST_MOD= 35;
 	public static final int DROP_OUT_GAME_MOD = 36;

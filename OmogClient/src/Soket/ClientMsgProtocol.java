@@ -4,11 +4,11 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class ClientMsgProtocol {
-	private int mod;
-	private int mySid;
-	private int youSid;
-	private int msgByteSize;
-	private byte msg[];
+	private int mod=0;
+	private int mySid=0;
+	private int youSid=0;
+	private int msgByteSize=0;
+	private byte msg[]=null;
 	//private String message =null;
 	
 	private final int INTSIZE = 4;
@@ -20,6 +20,16 @@ public class ClientMsgProtocol {
 		this.youSid = youSid;
 		this.msgByteSize = msgByteSize;
 		this.msg =msg;
+	}
+	
+	static public byte[] getByteToString(String msg){
+		byte[] b=null;
+		try{
+			b = msg.getBytes("UTF-8");
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return b;
 	}
 	
 	public ByteBuffer getByteBuffer(){
@@ -42,25 +52,44 @@ public class ClientMsgProtocol {
 		}
 	}
 	
+	public ByteBuffer getBasicByteBuffer(){
+		ByteBuffer result = null;
+		try{
+		//byte[] msgB= message.getBytes("UTF-8");
+		
+		//byte[] msgB= message.getBytes();
+		int length = INTSIZE*3;
+		result = ByteBuffer.allocate(length);
+		result.putInt(this.mod);
+		result.putInt(this.mySid);
+		result.putInt(this.youSid);
+		return result;
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
 	public void setByteBuffer(byte[] b){
 		byte[] tempArr;
 		int length =0;
 		tempArr = new byte[4];
 		System.arraycopy(b, length, tempArr, 0, INTSIZE);
 		length +=INTSIZE;
-		this.mod = byteToInt(reverseByte(tempArr));
+		this.mod = byteToInt(tempArr);
 		
 		System.arraycopy(b, length, tempArr, 0, INTSIZE);
 		length +=INTSIZE;
-		this.mySid = byteToInt(reverseByte(tempArr));
+		this.mySid = byteToInt(tempArr);
 		
 		System.arraycopy(b, length, tempArr, 0, INTSIZE);
 		length +=INTSIZE;
-		this.youSid = byteToInt(reverseByte(tempArr));
+		this.youSid = byteToInt(tempArr);
 		
 		System.arraycopy(b, length, tempArr, 0, INTSIZE);
 		length +=INTSIZE;
-		this.msgByteSize = byteToInt(reverseByte(tempArr));
+		this.msgByteSize = byteToInt(tempArr);
 		
 		this.msg = new byte[msgByteSize];
 		System.arraycopy(b, length, this.msg, 0, msgByteSize);
@@ -75,11 +104,14 @@ public class ClientMsgProtocol {
 		result[3] = b[0];
 		return result;
 	}
-	static private int byteToInt(byte[] arr){
+	/*static private int byteToInt(byte[] arr){
 		return (arr[0] & 0xff)<<24 | (arr[1] & 0xff)<<16 |
 				(arr[2] & 0xff)<<8 | (arr[3] & 0xff);
+	}*/
+	static public int byteToInt(byte[] arr){
+		return (arr[0] & 0xff) | (arr[1] & 0xff)<<8 |
+				(arr[2] & 0xff)<<16 | (arr[3] & 0xff)<<24;
 	}
-	
 	public void print(){
 		System.out.println(mod+", "+mySid+", "+youSid+", "+msgByteSize);
 	}

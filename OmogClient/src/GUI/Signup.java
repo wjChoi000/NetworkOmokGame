@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import Soket.ClientMsgProtocol;
+import Static.UtilSocketMode;
 
 
 public class Signup extends JDialog {
@@ -141,14 +142,24 @@ public class Signup extends JDialog {
 				return;
 			}
 			else{
+				msg = id+"$"+password+"$"+name;
+				byte[] b = ClientMsgProtocol.getByteToString(msg);
 				
-				//network
-				//id Duplication check;
-				//DB save
+				mf.getClientMsgProtocol().setMod(UtilSocketMode.SIGNUP_MOD);
+				mf.getClientMsgProtocol().setMsgByteSize(b.length);
+				mf.getClientMsgProtocol().setMsg(b);
+
+				int result = mf.getClientSocket().sendMessage(mf.getClientMsgProtocol());
+				System.out.print("read : "+result);
 				
-				
-				JOptionPane.showMessageDialog(null, "Sign up is success." ,"SUCCESS", JOptionPane.INFORMATION_MESSAGE);
-				setVisible(false);
+				if(result == UtilSocketMode.SIGNUP_MOD){
+					JOptionPane.showMessageDialog(null, "Sign up is success." ,"SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+					setVisible(false);	
+				}else{
+					msg = "exist id.";
+					JOptionPane.showMessageDialog(null, msg ,"error", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
 			}
 		}
 		

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import Soket.ClientMsgProtocol;
 import Soket.ClientSocket;
 import model.User;
 
@@ -23,7 +24,7 @@ public class MainFrame extends JFrame{
 	private User user = new User("swelo12","","wj",1,1,1);
 	
 	private ClientSocket clientSocket;
-	
+	private ClientMsgProtocol clientMsgProtocol = new ClientMsgProtocol();
 	MainFrame(){
 		init();
 	}
@@ -140,6 +141,14 @@ public class MainFrame extends JFrame{
 
 	public ClientSocket getClientSocket() {
 		return clientSocket;
+	}
+
+	public ClientMsgProtocol getClientMsgProtocol() {
+		return clientMsgProtocol;
+	}
+
+	public void setClientMsgProtocol(ClientMsgProtocol clientMsgProtocol) {
+		this.clientMsgProtocol = clientMsgProtocol;
 	}
 	
 }

@@ -20,9 +20,6 @@ public class Login extends JPanel {
 	
 	private Signup signupDialog;
 	
-	private ClientMsgProtocol sendMsg;
-	private ClientMsgProtocol receiveMsg;
-	
 	Login(MainFrame mainFrame){
 		this.mainFrame = mainFrame;
 		init();
@@ -83,30 +80,26 @@ public class Login extends JPanel {
 			boolean validity =true;
 			String errorMsg = null;
 			
+
 			String id = inputId.getText().trim();
 			String pw = inputPassword.getText().trim();
+			String msg = id+"$"+pw;
 			
 			if(id.length() >20 || pw.length()>20){
 				validity = false;
 				errorMsg = "Enter text length under 20!";
 			}
 			if(validity){
-				byte[] b =null;
-				byte[] bid= null;
-				byte[] bpw = null;
-				try{
-					bid = id.getBytes("UTF-8");
-					bpw = pw.getBytes("UTF-8");
-					
-				}catch(Exception ex){
-					ex.printStackTrace();
-				}
+				byte[] b = ClientMsgProtocol.getByteToString(msg);
 				
-				sendMsg = new ClientMsgProtocol(UtilSocketMode.LOGIN_MOD,0,0, bid.length,bid);
-				receiveMsg =mainFrame.getClientSocket().sendMessage(sendMsg);
-				System.out.print("read : ");
-				receiveMsg.print();
-				if(receiveMsg.getMod() == UtilSocketMode.LOGIN_MOD){
+				mainFrame.getClientMsgProtocol().setMod(UtilSocketMode.LOGIN_MOD);
+				mainFrame.getClientMsgProtocol().setMsgByteSize(b.length);
+				mainFrame.getClientMsgProtocol().setMsg(b);
+				
+				int result = mainFrame.getClientSocket().sendMessage(mainFrame.getClientMsgProtocol());
+				System.out.print("read : "+result);
+				
+				if(result == UtilSocketMode.LOGIN_MOD){
 					mainFrame.goWaitingRoom();				
 					return;
 				}

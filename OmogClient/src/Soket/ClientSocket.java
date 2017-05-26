@@ -34,7 +34,8 @@ public class ClientSocket extends UtilSocketMode {
 		}
 	}
 	
-	public ClientMsgProtocol sendMessage(ClientMsgProtocol msg){
+	//login and sign up
+	public int sendLoginMessage(ClientMsgProtocol msg){
 		try{
 			ByteBuffer bbuf = msg.getByteBuffer();
 			os.write( bbuf.array());
@@ -42,21 +43,49 @@ public class ClientSocket extends UtilSocketMode {
 			System.out.print("write : ");
 			msg.print();
 			///////////////////////////////////////////////
-			
-			ClientMsgProtocol result = new ClientMsgProtocol();
+			int r;
+			//ClientMsgProtocol result = new ClientMsgProtocol();
 			int read = 0;
 			read = bis.read(buf,0,BUFFERSIZE);
 			if(read <0){
 				System.out.println("read "+read);
-				return null;
+				return -1;
 			}
-			result.setByteBuffer(buf);
-			return result;
+			r = ClientMsgProtocol.byteToInt(buf);
+			//result.setByteBuffer(buf);
+			return r;
 		}catch(Exception e){
 			e.printStackTrace();
-			return null;
+			return -1;
 		}
 	}
+	
+	public int sendMessage(ClientMsgProtocol msg){
+		try{
+			ByteBuffer bbuf = msg.getBasicByteBuffer();
+			os.write( bbuf.array());
+			os.flush();
+			System.out.print("write : ");
+			msg.print();
+			///////////////////////////////////////////////
+			int r;
+			//ClientMsgProtocol result = new ClientMsgProtocol();
+			int read = 0;
+			read = bis.read(buf,0,BUFFERSIZE);
+			if(read <0){
+				System.out.println("read "+read);
+				return -1;
+			}
+			r = ClientMsgProtocol.byteToInt(buf);
+			//result.setByteBuffer(buf);
+			return r;
+		}catch(Exception e){
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	
 	
 	/*//sender thread
 	class ClientSender implements Runnable{
