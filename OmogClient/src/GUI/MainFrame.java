@@ -60,14 +60,14 @@ public class MainFrame extends JFrame{
 		clientSocket = new ClientSocket();
 		
 		//close event
-		/*dialogClose = new DialogConfirmClose(this);
+		dialogClose = new DialogConfirmClose(this);
 		addWindowListener( new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent we) {
-				dialogClose.setVisible(true);
-				
+				clientSocket.closeSocket();
+				//dialogClose.setVisible(true);
 			}
-		} );*/
+		} );
 	}
 	
 	/*

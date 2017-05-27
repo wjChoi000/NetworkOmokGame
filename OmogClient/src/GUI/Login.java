@@ -89,6 +89,10 @@ public class Login extends JPanel {
 				validity = false;
 				errorMsg = "Enter text length under 20!";
 			}
+			if(id.length() ==0 || pw.length() ==0){
+				validity = false;
+				errorMsg = "Enter id and password!";
+			}
 			if(validity){
 				byte[] b = ClientMsgProtocol.getByteToString(msg);
 				
@@ -99,8 +103,11 @@ public class Login extends JPanel {
 				int result = mainFrame.getClientSocket().sendLoginMessage(mainFrame.getClientMsgProtocol());
 				System.out.print("read : "+result);
 				
-				if(result == UtilSocketMode.LOGIN_MOD){
+				if(result != -1){
+					
+					mainFrame.getClientMsgProtocol().setMySid(result);
 					mainFrame.goWaitingRoom();				
+					
 					return;
 				}
 				else{

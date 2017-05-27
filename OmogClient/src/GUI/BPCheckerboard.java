@@ -36,6 +36,7 @@ public class BPCheckerboard extends JPanel {
 	private MouseAdapter mouseAdapter;
 	private BPGameMenu menu;
 	
+	private int myStone;
 	public void setBPGameMenu(BPGameMenu menu){this.menu = menu; }
 	BPCheckerboard(){
 		init();
@@ -44,8 +45,12 @@ public class BPCheckerboard extends JPanel {
 
 	
 	private void init(){
+		//get my stone color
+		myStone =StoneArray.BLACK_STONE;
+		
 		this.setLayout(null);
 		stone = new StoneArray();
+		
 		mouseAdapter =new MouseAdapter() {
 			public void mouseReleased(MouseEvent e){
 				Point p =putStonePoint(e.getPoint());
@@ -74,13 +79,7 @@ public class BPCheckerboard extends JPanel {
 		};
 		this.setSize(w,h);
 	}
-	public void addListener(){
-
-		this.addMouseListener(mouseAdapter);
-	}
-	public void removeListener(){
-		this.removeMouseListener(mouseAdapter);
-	}
+	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		//set background
@@ -148,9 +147,18 @@ public class BPCheckerboard extends JPanel {
 		blackPV = new Vector<Point>();
 		repaint();
 		addListener();
-		}
+	}
+	
 	public void endGame(){
 		removeListener();
+	}
+	
+	public void addListener(){
+		this.addMouseListener(mouseAdapter);
+	}
+	
+	public void removeListener(){
+		this.removeMouseListener(mouseAdapter);
 	}
 	
 }

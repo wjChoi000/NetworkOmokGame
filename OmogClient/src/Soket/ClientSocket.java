@@ -84,6 +84,15 @@ public class ClientSocket extends UtilSocketMode {
 			return -1;
 		}
 	}
+	public void closeSocket(){
+		try{
+		os.close();
+		bis.close();
+		socket.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	
 	
 	

@@ -7,6 +7,8 @@ public class ClientMsgProtocol {
 	private int mod=0;
 	private int mySid=0;
 	private int youSid=0;
+	
+	// use login, signup, chatting
 	private int msgByteSize=0;
 	private byte msg[]=null;
 	//private String message =null;
@@ -36,10 +38,10 @@ public class ClientMsgProtocol {
 		ByteBuffer result = null;
 		try{
 		//byte[] msgB= message.getBytes("UTF-8");
-		
 		//byte[] msgB= message.getBytes();
 		int length = INTSIZE*4+msg.length;
 		result = ByteBuffer.allocate(length);
+		result.order(ByteOrder.LITTLE_ENDIAN);
 		result.putInt(this.mod);
 		result.putInt(this.mySid);
 		result.putInt(this.youSid);
@@ -56,10 +58,10 @@ public class ClientMsgProtocol {
 		ByteBuffer result = null;
 		try{
 		//byte[] msgB= message.getBytes("UTF-8");
-		
 		//byte[] msgB= message.getBytes();
 		int length = INTSIZE*3;
 		result = ByteBuffer.allocate(length);
+		result.order(ByteOrder.LITTLE_ENDIAN);
 		result.putInt(this.mod);
 		result.putInt(this.mySid);
 		result.putInt(this.youSid);
@@ -96,14 +98,14 @@ public class ClientMsgProtocol {
 		
 		//message = new String(tempArr);
 	}
-	private byte[] reverseByte(byte[] b){
+	/*private byte[] reverseByte(byte[] b){
 		byte[] result = new byte[4];
 		result[0] = b[3];
 		result[1] = b[2];
 		result[2] = b[1];
 		result[3] = b[0];
 		return result;
-	}
+	}*/
 	/*static private int byteToInt(byte[] arr){
 		return (arr[0] & 0xff)<<24 | (arr[1] & 0xff)<<16 |
 				(arr[2] & 0xff)<<8 | (arr[3] & 0xff);
@@ -113,7 +115,7 @@ public class ClientMsgProtocol {
 				(arr[2] & 0xff)<<16 | (arr[3] & 0xff)<<24;
 	}
 	public void print(){
-		System.out.println(mod+", "+mySid+", "+youSid+", "+msgByteSize);
+		System.out.println(mod+", "+mySid+", "+youSid);
 	}
 	/*static public void main(String[] args){
 		ClientMsgProtocol protocol = new ClientMsgProtocol(1,1,1,3,"a312312bc");
