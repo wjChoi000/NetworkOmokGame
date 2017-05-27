@@ -1,3 +1,7 @@
+#ifndef __SERVER_H__
+#define __SERVER_H__
+
+
 #define MAXBUF 1024 //버퍼 최대 길이
 #define LISTENQ 20 //Listen Queue 최대 크기
 #define MAX_THREAD 20//동시 접속 가능한 클라이언트의 수
@@ -7,9 +11,6 @@
 #define STATUS_PLAY 1
 
 //wj
-#define IP "127.0.0.1"
-#define port 8090
-#define BUFFERSIZE 1024
 
 #define LOGIN_MOD 1
 #define SIGNUP_MOD 2
@@ -29,6 +30,7 @@
 #define DRAW_REQUEST_MOD 35
 #define DROP_OUT_GAME_MOD 36
 #define PUT_STONE_MOD 37
+
 //wj
 #define MODE_LOGIN 1
 #define MODE_NCHAT 2
@@ -37,6 +39,18 @@
 #define MODE_ENTERROOM 5
 #define MODE_GAME 6
 #define MODE_QUIT 7
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <pthread.h>
+
+#include "userDAO.h"
 
 typedef struct clientData{
 	int socket;
@@ -61,3 +75,11 @@ void quit(void);
 
 int searchName(char* name);
 void error_handling(char* str); //에러 출력
+
+
+void parseIDAndPW(char *parse, char* id, char* pw);
+void parseIDAndPWAndName(char *parse, char* id, char* pw, char* name);
+void login(int from,char* message);
+void signup(int from,char* message);
+
+#endif
