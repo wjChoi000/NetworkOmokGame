@@ -20,7 +20,12 @@ public class User {
 		
 	}
 	
-	
+	public String toString(){
+		return id+","+password+","+name+","+win+","+lose+","+draw;
+	}
+	public void print(){
+		System.out.println(toString());
+	}
 	public String getId() {
 		return id;
 	}

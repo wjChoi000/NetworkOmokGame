@@ -1,6 +1,11 @@
-#ifndef USERDAO_H
-#define USERDAO_H
+#ifndef __USERDAO_H__
+#define __USERDAO_H__
 
+#define DB_HOST "211.33.169.195"
+#define DB_USER "root"
+#define DB_PASS "1234"
+#define DB_NAME "omoggame"
+#define DB_PORT 3306
 
 #include "/usr/include/mysql/mysql.h"
 //#include <mysql.h>
@@ -8,11 +13,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define DB_HOST "127.0.0.1"
-#define DB_USER "root"
-#define DB_PASS "1234"
-#define DB_NAME "omoggame"
-#define DB_PORT 3306
+/*
+create database omoggame;
+create table user(
+    id char(20) CHARACTER SET utf8 primary key,
+    password char(20) CHARACTER SET utf8 not null ,
+	name char(20) CHARACTER SET utf8 not null ,
+    win int,
+    lose int,
+    draw int
+) CHARACTER SET utf8;
+
+*/
 
 
 typedef struct userDTO{
@@ -24,10 +36,6 @@ typedef struct userDTO{
     int draw;   
 }User;
 
-MYSQL *connection=NULL, conn;
-MYSQL_RES   *sql_result;
-MYSQL_ROW   sql_row;
-int query_stat;
 
 User* createUser();
 int InsertUser(char* id, char* password, char* name, int win, int lose, int draw);

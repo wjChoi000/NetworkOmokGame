@@ -8,6 +8,7 @@ import javax.swing.*;
 
 import Soket.ClientMsgProtocol;
 import Static.UtilSocketMode;
+import model.User;
 
 public class Login extends JPanel {
 	private MainFrame mainFrame;
@@ -19,9 +20,11 @@ public class Login extends JPanel {
 	private JButton btnSignup;
 	
 	private Signup signupDialog;
+	private User user;
 	
 	Login(MainFrame mainFrame){
 		this.mainFrame = mainFrame;
+		user= mainFrame.getUser();
 		init();
 	}
 	private void init(){
@@ -100,11 +103,13 @@ public class Login extends JPanel {
 				mainFrame.getClientMsgProtocol().setMsgByteSize(b.length);
 				mainFrame.getClientMsgProtocol().setMsg(b);
 				
-				int result = mainFrame.getClientSocket().sendLoginMessage(mainFrame.getClientMsgProtocol());
+				
+				int result = mainFrame.getClientSocket().sendLoginMessage(mainFrame.getClientMsgProtocol(),user);
 				System.out.print("read : "+result);
 				
 				if(result != -1){
-					
+					user.setId(id);
+					user.print();
 					mainFrame.getClientMsgProtocol().setMySid(result);
 					mainFrame.goWaitingRoom();				
 					

@@ -1,14 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <pthread.h>
 #include "server.h"
-#include "userDAO.h"
 
 /*mutex :	synchronization between Threads */
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER; //mutex Initilaize
@@ -98,10 +88,15 @@ void *RunThread(void* arg)
 		printf("message : %s\n",message);
 		from = 0; to = 0; msgLength = 0;
 		switch(mode){
-			case LOGIN_MOD
-				printf("mode : login\n");
-				login(from,message);
+			case LOGIN_MOD:
+				
+				login(acptSock,message);
 				break;
+			case SIGNUP_MOD:
+				
+				signup(acptSock,message);
+				break;
+			/*			
 			case MODE_NCHAT:
 				printf("mode : NCHATIN\n");
 				chatting(mode,from,to,message);
@@ -112,8 +107,8 @@ void *RunThread(void* arg)
 				break;
 
 			case MODE_GAME:
-				/* Game Message Format : "x\ty"*/
 				playGame(mode,from,to,message);
+*/
 			default : 
 				break;
 		}
@@ -208,53 +203,84 @@ void parseIDAndPWAndName(char *parse, char* id, char* pw, char* name){
 	char* i = index(parse,'$');
 	int length = i-parse;	
 	memcpy(id,parse,length);
-	char* i2 = index(i,'$');
-	length = i2- i;
-	memcpy(pw,i+1,length);
-	char* i3 = index(i,0);
-	length = i3- i2;
-	memcpy(pw,i2+1,length);
-}
 
+	char* i2 = index(i+1,'$');
+	length = i2- i-1;
+	memcpy(pw,i+1,length);
+
+	char* i3 = index(i2+1,0);
+	length = i3- i2;
+	memcpy(name,i2+1,length-1);
+}
 void login(int from,char* message)
 {
+printf("from %d :mode : login\n",from);
 	pthread_mutex_lock(&mutex);
-	
+	int mod = -1;
 	char id[20],pw[20];
         memset(id,0,20);
 	memset(pw,0,20);	
 	
 	parseIDAndPW(message,id,pw);
+	User* user = SearchUserByID(id);
 
-	User user = SearchUserByID(id);
-	
-	if(user == null)
-		write(userData[from].socket,0,sizeof(int));
-	else
-		write(userData[from].socket,LOGIN_MOD,sizeof(int));
+	char* send[128];
+	memset(send,0,128);
 
+	if(user == NULL){
+		printf("from %d : no suer\n",from);
+		mod =-1;
+
+		memcpy(send, &mod,sizeof(int));	
+	}	
+	else{
+		if(!strcmp(pw,user->password)){
+			int win =user->win;
+			int lose = user->lose;
+			int draw = user->draw;
+			printf("from %d : success : %s,%s,%d,%d,%d\n",from,user->id,user->name,win,lose,draw);
+			mod = from;
+
+			memcpy(send, &mod,sizeof(int));
+			memcpy(send+4, &win,sizeof(int));
+			memcpy(send+8, &lose,sizeof(int));
+			memcpy(send+12, &draw,sizeof(int));
+			memcpy(send+16, user->name,strlen(user->name));
+			
+			printf("%d %d %d %s\n",*((int *)(send+sizeof(int)*1)),*((int *)(send+sizeof(int)*2)),*((int *)(send+sizeof(int)*3)),send+sizeof(int)*4);	
+		}
+		else{
+			printf("from %d : worng password(%s/%s)\n",from,pw,user->password);
+			mod =-1;
+			memcpy(send, &mod,sizeof(int));
+		}
+	}
+	int l = write(from,send,128);
+	printf("write length: %d\n",l);		
 	pthread_mutex_unlock(&mutex);
 }
 
 void signup(int from,char* message)
 {
+printf("mod : signup\n");
 	pthread_mutex_lock(&mutex);
-	
-	char id[20],pw[20], name[20];
+	int mod =SIGNUP_MOD;
+	char id[20],pw[20],name[20];
         memset(id,0,20);
 	memset(pw,0,20);	
 	memset(name,0,20);
 	
 	parseIDAndPWAndName(message,id,pw,name);
 
-	User user = SearchUserByID(id);
+	User* user = SearchUserByID(id);
 	
-	if(user != null){
-		write(userData[from].socket,0,sizeof(int));
-		
+	if(user != NULL){
+		printf("signup false \n");
+		mod =0;		
 	}		
-	else{
-		write(userData[from].socket,SIGNUP_MOD,sizeof(int));
+	else{	printf("signup sccess\n");
+		InsertUser(id,pw,name,0,0,0);	
 	}
+	write(from,&mod,sizeof(int));
 	pthread_mutex_unlock(&mutex);
 }

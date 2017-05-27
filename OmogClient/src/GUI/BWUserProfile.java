@@ -59,6 +59,7 @@ public class BWUserProfile extends JPanel{
 	BWUserProfile(MainFrame mf, BWWaitingRoom waitPanel){
 		this.waitPanel = waitPanel;
 		this.mf = mf;
+		this.user = mf.getUser();
 		userlist = new ArrayList<User>();
 		
 		userlist.add(new User("a","","a",1,2,3));
@@ -82,7 +83,7 @@ public class BWUserProfile extends JPanel{
 		setLayout(null);
 		
 		//AddUserPanel();
-		userPanel =new UserPanel("My Information",new User("wj@naver.com"," ","wj",1,1,1),true);
+		userPanel =new UserPanel("My Information",user,true);
 		userPanel.setBounds(m, m, width-2, userPanel.getHeight());
 		add(userPanel);
 		

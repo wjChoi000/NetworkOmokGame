@@ -98,14 +98,14 @@ public class ClientMsgProtocol {
 		
 		//message = new String(tempArr);
 	}
-	/*private byte[] reverseByte(byte[] b){
+	static public byte[] reverseByte(byte[] b){
 		byte[] result = new byte[4];
 		result[0] = b[3];
 		result[1] = b[2];
 		result[2] = b[1];
 		result[3] = b[0];
 		return result;
-	}*/
+	}
 	/*static private int byteToInt(byte[] arr){
 		return (arr[0] & 0xff)<<24 | (arr[1] & 0xff)<<16 |
 				(arr[2] & 0xff)<<8 | (arr[3] & 0xff);

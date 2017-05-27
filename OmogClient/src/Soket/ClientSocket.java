@@ -15,7 +15,7 @@ public class ClientSocket extends UtilSocketMode {
 	private OutputStream os;
 	private BufferedInputStream bis;
 	private byte[] buf = new byte[BUFFERSIZE];
-	
+	private int  INTSIZE =4;
 	//connect socket when java app started.
 	public ClientSocket(){
 		try{
@@ -35,7 +35,7 @@ public class ClientSocket extends UtilSocketMode {
 	}
 	
 	//login and sign up
-	public int sendLoginMessage(ClientMsgProtocol msg){
+	public int sendSignupMessage(ClientMsgProtocol msg){
 		try{
 			ByteBuffer bbuf = msg.getByteBuffer();
 			os.write( bbuf.array());
@@ -52,6 +52,73 @@ public class ClientSocket extends UtilSocketMode {
 				return -1;
 			}
 			r = ClientMsgProtocol.byteToInt(buf);
+			//result.setByteBuffer(buf);
+			return r;
+		}catch(Exception e){
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	public int sendLoginMessage(ClientMsgProtocol msg, User user){
+		try{
+			System.out.println();
+			ByteBuffer bbuf = msg.getByteBuffer();
+			os.write( bbuf.array());
+			os.flush();
+			System.out.print("login write : ");
+			msg.print();
+			///////////////////////////////////////////////
+			int r;
+			//ClientMsgProtocol result = new ClientMsgProtocol();
+			
+			int read = 0;
+			int l =0;
+			
+			read = bis.read(buf,0,128);
+			
+			System.out.println("login read: ");
+			if(read <0){
+				System.out.println("login read error");
+				return -1;
+			}
+			
+			byte[] tempArr;
+			int length =0;
+			tempArr = new byte[4];
+			System.arraycopy(buf, length, tempArr, 0, INTSIZE);
+			r = ClientMsgProtocol.byteToInt(tempArr);
+			
+			if(r != -1){
+				int win;
+				int lose;
+				int draw;
+				System.out.println("login success : mode("+r+") parse : size ("+read+")");
+				length +=INTSIZE;
+				
+				System.arraycopy(buf, length, tempArr, 0, INTSIZE);
+				length +=INTSIZE;
+				win = ClientMsgProtocol.byteToInt(tempArr);
+				
+				System.arraycopy(buf, length, tempArr, 0, INTSIZE);
+				length +=INTSIZE;
+				lose = ClientMsgProtocol.byteToInt(tempArr);
+					
+				System.arraycopy(buf, length, tempArr, 0, INTSIZE);
+				length +=INTSIZE;
+				draw =ClientMsgProtocol.byteToInt(tempArr);
+				
+				
+				tempArr = new byte[112];
+				System.arraycopy(buf, length, tempArr, 0, 112);
+				
+				user.setWin(win);
+				user.setLose(lose);
+				user.setDraw(draw);
+				user.setName(new String(tempArr));
+				System.out.println(win+","+lose+","+draw+","+new String(tempArr));
+			}
+			System.out.println();
 			//result.setByteBuffer(buf);
 			return r;
 		}catch(Exception e){
@@ -94,64 +161,5 @@ public class ClientSocket extends UtilSocketMode {
 		}
 	}
 	
-	
-	
-	/*//sender thread
-	class ClientSender implements Runnable{
-		private Socket socket;
-		private OutputStream os;
-		ClientSender(Socket socket){
-			this.socket = socket;
-			try{
-				this.os = (OutputStream)socket.getOutputStream();
-			}catch(Exception e){
-				System.out.println("client sender, init error");
-				e.printStackTrace();
-			}
-			
-		}
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			try{
-				while(true){
-					System.out.println("sender socket wait");
-					this.wait();
-					
-				}
-			}
-			catch(Exception e){
-				System.out.println("client sender, error");
-				e.printStackTrace();
-			}
-		}
-		
-		public void sendMessage(int mod){
-			this.notify();
-			System.out.println("sender socket notify : "+mod);
-			try{
-				switch(mod){
-				case LOGIN_MOD:
-					
-					String id = "swelo";
-					User user = new User("swelo","1234","원준",0,0,0);
-					os.write(user.getName().getBytes("UTF-8"));
-					
-					System.out.println("sender socket notify : login success");
-					break;
-				case SIGNUP_MOD:
-
-					break;
-				}
-			}catch(ConnectException ce){
-				ce.printStackTrace();
-			}catch(IOException ie){
-				ie.printStackTrace();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			
-		}
-	}*/
 	
 }

@@ -149,7 +149,7 @@ public class Signup extends JDialog {
 				mf.getClientMsgProtocol().setMsgByteSize(b.length);
 				mf.getClientMsgProtocol().setMsg(b);
 
-				int result = mf.getClientSocket().sendLoginMessage(mf.getClientMsgProtocol());
+				int result = mf.getClientSocket().sendSignupMessage(mf.getClientMsgProtocol());
 				System.out.print("read : "+result);
 				
 				if(result == UtilSocketMode.SIGNUP_MOD){

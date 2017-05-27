@@ -21,7 +21,7 @@ public class MainFrame extends JFrame{
 	private BPCheckerboard checker;
 	private DialogConfirmClose dialogClose;
 	
-	private User user = new User("swelo12","","wj",1,1,1);
+	private User user = new User();
 	
 	private ClientSocket clientSocket;
 	private ClientMsgProtocol clientMsgProtocol = new ClientMsgProtocol();
