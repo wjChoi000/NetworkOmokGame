@@ -6,6 +6,30 @@
 #define STATUS_WAIT 0
 #define STATUS_PLAY 1
 
+//wj
+#define IP "127.0.0.1"
+#define port 8090
+#define BUFFERSIZE 1024
+
+#define LOGIN_MOD 1
+#define SIGNUP_MOD 2
+
+#define CHATTING_MTM_MOD 21
+#define MAKEROOM_MOD 22
+#define ENTERROOM_MOD 23
+#define UPDATEROOM_MOD 24
+#define UPDATEUSERS_MOD 25
+#define LOGOUT_MOD 26
+#define GETROOM_DOM 27
+	
+#define READY_GAME_MOD 31
+#define WAIT_GAME_MOD 32
+#define GO_OUT_ROOM_MOD 33
+#define START_GAME_MOD 34
+#define DRAW_REQUEST_MOD 35
+#define DROP_OUT_GAME_MOD 36
+#define PUT_STONE_MOD 37
+//wj
 #define MODE_LOGIN 1
 #define MODE_NCHAT 2
 #define MODE_1CHAT 3

@@ -8,6 +8,7 @@
 #include <netinet/in.h>
 #include <pthread.h>
 #include "server.h"
+#include "userDAO.h"
 
 /*mutex :	synchronization between Threads */
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER; //mutex Initilaize
@@ -97,11 +98,9 @@ void *RunThread(void* arg)
 		printf("message : %s\n",message);
 		from = 0; to = 0; msgLength = 0;
 		switch(mode){
-			case MODE_LOGIN:
-				 /*parse message
-				  search DB
-				  send clinet
-				  */
+			case LOGIN_MOD
+				printf("mode : login\n");
+				login(from,message);
 				break;
 			case MODE_NCHAT:
 				printf("mode : NCHATIN\n");
@@ -189,4 +188,73 @@ int searchName(char* searching_name)
 			return index;
 	}
 	return -1;
+}
+
+
+//wj
+void parseIDAndPW(char *parse, char* id, char* pw){
+	
+
+	char* i = index(parse,'$');
+	int length = i-parse;	
+	memcpy(id,parse,length);
+	char* i2 = index(i,0);
+	length = i2- i;
+	memcpy(pw,i+1,length);
+	
+}
+
+void parseIDAndPWAndName(char *parse, char* id, char* pw, char* name){
+	char* i = index(parse,'$');
+	int length = i-parse;	
+	memcpy(id,parse,length);
+	char* i2 = index(i,'$');
+	length = i2- i;
+	memcpy(pw,i+1,length);
+	char* i3 = index(i,0);
+	length = i3- i2;
+	memcpy(pw,i2+1,length);
+}
+
+void login(int from,char* message)
+{
+	pthread_mutex_lock(&mutex);
+	
+	char id[20],pw[20];
+        memset(id,0,20);
+	memset(pw,0,20);	
+	
+	parseIDAndPW(message,id,pw);
+
+	User user = SearchUserByID(id);
+	
+	if(user == null)
+		write(userData[from].socket,0,sizeof(int));
+	else
+		write(userData[from].socket,LOGIN_MOD,sizeof(int));
+
+	pthread_mutex_unlock(&mutex);
+}
+
+void signup(int from,char* message)
+{
+	pthread_mutex_lock(&mutex);
+	
+	char id[20],pw[20], name[20];
+        memset(id,0,20);
+	memset(pw,0,20);	
+	memset(name,0,20);
+	
+	parseIDAndPWAndName(message,id,pw,name);
+
+	User user = SearchUserByID(id);
+	
+	if(user != null){
+		write(userData[from].socket,0,sizeof(int));
+		
+	}		
+	else{
+		write(userData[from].socket,SIGNUP_MOD,sizeof(int));
+	}
+	pthread_mutex_unlock(&mutex);
 }
