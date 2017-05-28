@@ -90,11 +90,12 @@ void *RunThread(void* arg)
 		switch(mode){
 			case LOGIN_MOD:
 				
-				login(acptSock,message);
+				login(from,message);
+
 				break;
 			case SIGNUP_MOD:
 				
-				signup(acptSock,message);
+				signup(from,message);
 				break;
 			/*			
 			case MODE_NCHAT:
@@ -186,7 +187,7 @@ int searchName(char* searching_name)
 }
 
 
-//wj
+//login & sign up
 void parseIDAndPW(char *parse, char* id, char* pw){
 	
 
@@ -216,6 +217,7 @@ void login(int from,char* message)
 {
 printf("from %d :mode : login\n",from);
 	pthread_mutex_lock(&mutex);
+
 	int mod = -1;
 	char id[20],pw[20];
         memset(id,0,20);
@@ -223,8 +225,7 @@ printf("from %d :mode : login\n",from);
 	
 	parseIDAndPW(message,id,pw);
 	User* user = SearchUserByID(id);
-
-	char* send[128];
+	char send[128];
 	memset(send,0,128);
 
 	if(user == NULL){
@@ -235,19 +236,26 @@ printf("from %d :mode : login\n",from);
 	}	
 	else{
 		if(!strcmp(pw,user->password)){
+			memcpy( userData[from].id, id,strlen(userData[from].id));			
+			
 			int win =user->win;
 			int lose = user->lose;
 			int draw = user->draw;
+			char d ='$';
 			printf("from %d : success : %s,%s,%d,%d,%d\n",from,user->id,user->name,win,lose,draw);
 			mod = from;
-
+			
+			//sprintf(send,"%d%c%d%c%d%c%d%c%s%c",mod,d,win,d,lose,d,draw,d,message,d);
+						
 			memcpy(send, &mod,sizeof(int));
 			memcpy(send+4, &win,sizeof(int));
 			memcpy(send+8, &lose,sizeof(int));
 			memcpy(send+12, &draw,sizeof(int));
 			memcpy(send+16, user->name,strlen(user->name));
 			
-			printf("%d %d %d %s\n",*((int *)(send+sizeof(int)*1)),*((int *)(send+sizeof(int)*2)),*((int *)(send+sizeof(int)*3)),send+sizeof(int)*4);	
+			printf("%d %d %d %s\n",*((int *)(send+sizeof(int)*1)),*((int *)(send+sizeof(int)*2)),*((int *)(send+sizeof(int)*3)),send+sizeof(int)*4);
+			
+			//printf("%s \n",send);	
 		}
 		else{
 			printf("from %d : worng password(%s/%s)\n",from,pw,user->password);
@@ -255,8 +263,10 @@ printf("from %d :mode : login\n",from);
 			memcpy(send, &mod,sizeof(int));
 		}
 	}
-	int l = write(from,send,128);
-	printf("write length: %d\n",l);		
+
+
+
+	write(userData[from].socket,send,128);		
 	pthread_mutex_unlock(&mutex);
 }
 
@@ -281,6 +291,117 @@ printf("mod : signup\n");
 	else{	printf("signup sccess\n");
 		InsertUser(id,pw,name,0,0,0);	
 	}
-	write(from,&mod,sizeof(int));
+	write(userData[from].socket,&mod,sizeof(int));
+
 	pthread_mutex_unlock(&mutex);
+}
+
+
+//gameing
+void putStone (int from,int to,char* message){	
+	pthread_mutex_lock(&mutex);
+
+	printf("%d mod put Stone \n",from);	
+	int mod =PUT_STONE_MOD;
+	
+	char send[128];
+	memset(send,0,128);
+
+	memcpy(send, &mod,sizeof(int));
+	memcpy(send+4, &from ,sizeof(int));
+	memcpy(send+8, &to,sizeof(int));
+	memcpy(send+12, message,strlen(message));
+
+	write(userData[to].socket,send,strlen(message)+sizeof(int)*3);
+
+	pthread_mutex_unlock(&mutex);
+}
+
+void endGame (int from,int to,char* message){	
+	pthread_mutex_lock(&mutex);
+
+	printf("%d mod put Stone \n",from);	
+	int mod =END_GAME_MOD;
+
+	//update DB	
+	WinUserByID(userData[from].id);
+	LoseUserByID(userData[to].id);	
+
+	char send[128];
+	memset(send,0,128);
+	memcpy(send, &mod,sizeof(int));
+	memcpy(send+4, &from ,sizeof(int));
+	memcpy(send+8, &to,sizeof(int));
+	memcpy(send+12, message,strlen(message));
+
+	write(userData[to].socket,send,strlen(message)+sizeof(int)*3);
+
+	pthread_mutex_unlock(&mutex);
+}
+
+
+
+void readyGame(int from,int to){
+pthread_mutex_lock(&mutex);
+
+	printf("%d mod read Game \n",from);	
+	int mod =READY_GAME_MOD;
+	
+	char send[12];
+	memset(send,0,128);
+
+	memcpy(send, &mod,sizeof(int));
+	memcpy(send+4, &from ,sizeof(int));
+	memcpy(send+8, &to,sizeof(int));
+	
+	write(userData[to].socket,send,sizeof(int)*3);
+
+	pthread_mutex_unlock(&mutex);
+
+}
+
+void waitGame(int from,int to){
+	pthread_mutex_lock(&mutex);
+
+	printf("%d mod wait game \n",from);	
+	int mod =WAIT_GAME_MOD;
+	
+	char send[12];
+	memset(send,0,128);
+
+	memcpy(send, &mod,sizeof(int));
+	memcpy(send+4, &from ,sizeof(int));
+	memcpy(send+8, &to,sizeof(int));
+	
+	write(userData[to].socket,send,sizeof(int)*3);
+
+	pthread_mutex_unlock(&mutex);
+
+}
+
+void goOutGame(int from,int to){
+	pthread_mutex_lock(&mutex);
+
+	printf("%d mod wait game \n",from);	
+	int mod =GO_OUT_ROOM_MOD;
+	
+
+	//leave room
+
+
+
+
+	//leave room
+
+	char send[12];
+	memset(send,0,128);
+	
+	memcpy(send, &mod,sizeof(int));
+	memcpy(send+4, &from ,sizeof(int));
+	memcpy(send+8, &to,sizeof(int));
+	
+	write(userData[to].socket,send,sizeof(int)*3);
+
+	pthread_mutex_unlock(&mutex);
+
 }

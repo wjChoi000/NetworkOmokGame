@@ -5,7 +5,7 @@
 #define MAXBUF 1024 //버퍼 최대 길이
 #define LISTENQ 20 //Listen Queue 최대 크기
 #define MAX_THREAD 20//동시 접속 가능한 클라이언트의 수
-#define MAX_NAME 8
+#define MAX_NAME 20
 
 #define STATUS_WAIT 0
 #define STATUS_PLAY 1
@@ -30,6 +30,7 @@
 #define DRAW_REQUEST_MOD 35
 #define DROP_OUT_GAME_MOD 36
 #define PUT_STONE_MOD 37
+#define END_GAME_MOD 38
 
 //wj
 #define MODE_LOGIN 1
@@ -55,6 +56,7 @@
 typedef struct clientData{
 	int socket;
 	int status;
+	char id[MAX_NAME];
 	char name[MAX_NAME];
 	int win;
 	int lose;

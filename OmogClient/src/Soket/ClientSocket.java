@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.StringTokenizer;
 
 import Static.UtilSocketMode;
 import model.User;
@@ -87,12 +88,23 @@ public class ClientSocket extends UtilSocketMode {
 			int length =0;
 			tempArr = new byte[4];
 			System.arraycopy(buf, length, tempArr, 0, INTSIZE);
+			String sender = new String(buf);
+			System.out.println(sender);
+			StringTokenizer str = new StringTokenizer(sender,"$");
+			//r = Integer.parseInt(str.nextToken());
 			r = ClientMsgProtocol.byteToInt(tempArr);
 			
 			if(r != -1){
 				int win;
 				int lose;
 				int draw;
+				String name;
+				
+				/*win = Integer.parseInt(str.nextToken());
+				lose = Integer.parseInt(str.nextToken());
+				draw = Integer.parseInt(str.nextToken());
+				name = str.nextToken();
+				*/
 				System.out.println("login success : mode("+r+") parse : size ("+read+")");
 				length +=INTSIZE;
 				
@@ -111,12 +123,13 @@ public class ClientSocket extends UtilSocketMode {
 				
 				tempArr = new byte[112];
 				System.arraycopy(buf, length, tempArr, 0, 112);
+				name = new String(tempArr);
 				
 				user.setWin(win);
 				user.setLose(lose);
 				user.setDraw(draw);
-				user.setName(new String(tempArr));
-				System.out.println(win+","+lose+","+draw+","+new String(tempArr));
+				user.setName(name);
+				System.out.println(win+","+lose+","+draw+","+name);
 			}
 			System.out.println();
 			//result.setByteBuffer(buf);

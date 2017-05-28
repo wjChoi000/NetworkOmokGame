@@ -1,7 +1,8 @@
 #ifndef __USERDAO_H__
 #define __USERDAO_H__
 
-#define DB_HOST "211.33.169.195"
+//#define DB_HOST "175.214.82.100"
+#define DB_HOST "127.0.0.1"
 #define DB_USER "root"
 #define DB_PASS "1234"
 #define DB_NAME "omoggame"

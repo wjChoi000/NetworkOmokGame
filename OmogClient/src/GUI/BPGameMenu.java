@@ -45,8 +45,10 @@ public class BPGameMenu extends JPanel {
 	private final int WAIT =1;
 	private final int READY = 2;
 	private final int START = 3;
-	private int state;
-		
+	
+	private int myState = WAIT;
+	private int youState = WAIT;
+	
 	private ClientSocket socket;
 	private ClientMsgProtocol protocol;
 	BPGameMenu(MainFrame mf, BPCheckerboard checker){
@@ -58,7 +60,7 @@ public class BPGameMenu extends JPanel {
 		init();
 	}
 	
-	private User opposite = new User("","","",0,0,0);
+	private User opposite = null;
 	
 	private void init(){
 		setLayout(null);
@@ -78,7 +80,10 @@ public class BPGameMenu extends JPanel {
 	
 	private void updateUserPanel(){
 		
-		youInfo = new UserPanel("Opposite info",opposite,false);
+		if(opposite == null)
+			youInfo = new UserPanel("Opposite info",new User("","","",0,0,0),false);
+		else
+			youInfo = new UserPanel("Opposite info",opposite,false);
 		youInfo.setBounds(m, m*2+userProfileH, width-2*m, userProfileH);
 		add(youInfo);
 		myInfo.updateUI();
@@ -102,8 +107,8 @@ public class BPGameMenu extends JPanel {
 		
 		btnStart.addActionListener(new ActionListenerStartGame());
 		btnExit.addActionListener(new ActionListenerExit());
-		btnDraw.addActionListener(new ActionListenerDraw());
-		btnGiveup.addActionListener(new ActionListenerGiveup());
+		//btnDraw.addActionListener(new ActionListenerDraw());
+		//btnGiveup.addActionListener(new ActionListenerGiveup());
 		
 		btnPanel.setBounds(0, m*3+userProfileH*2, width, height);
 		btnPanelEndGame();
@@ -125,11 +130,11 @@ public class BPGameMenu extends JPanel {
 	}
 	public void btnPanelReady(){
 		btnStart.setText("Ready");
-		state = READY;
+		myState = READY;
 	}
 	public void btnPanelWait(){
 		btnStart.setText("Wait");
-		state = WAIT;
+		myState = WAIT;
 	}
 	private int mod;
 	
@@ -138,34 +143,31 @@ public class BPGameMenu extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			
-			if(state == READY){
-				mod=UtilSocketMode.READY_GAME_MOD;
+			if(youState == WAIT){
+				if(myState == READY ){
+					mod=UtilSocketMode.READY_GAME_MOD;
+					btnPanelWait();
+					youState = WAIT;
+				}
+				else if(myState == WAIT ){
+					mod = UtilSocketMode.WAIT_GAME_MOD;
+					myState = READY;
+					btnPanelReady();
+				}
+				//send mseeage
+				//protocol.setMod(mod);
+				//int result = socket.sendMessage(protocol);
+				
 			}
-			else if(state == WAIT){
-				mod = UtilSocketMode.WAIT_GAME_MOD;
+			else if(youState == READY || myState == WAIT){
+				//start game
+				checker.startGame();
+				btnPanelStartGame();
 			}
 			else{
 				System.out.println("startGame btn error");
 				return;
 			}
-			protocol.setMod(mod);
-			
-			int result = socket.sendMessage(protocol);
-			System.out.print("read : "+result);
-			if(result != 0){
-				if(state == READY){
-					btnPanelReady();
-				}
-				else if(state == WAIT){
-					btnPanelWait();
-				}	
-			}
-			else{
-				System.out.println("startGame btn socket error");
-				return;
-			}
-			//checker.startGame();
-			//btnPanelStartGame();
 		}
 	}
 	class ActionListenerExit implements ActionListener{
@@ -174,7 +176,9 @@ public class BPGameMenu extends JPanel {
 		public void actionPerformed(ActionEvent arg0) {
 			mod = UtilSocketMode.GO_OUT_ROOM_MOD ;
 			protocol.setMod(mod);
-			int result = mf.getClientSocket().sendMessage(protocol);
+			//int result = mf.getClientSocket().sendMessage(protocol);
+			
+			int result = 1;
 			System.out.print("read : "+result);
 			if(result != 0){
 				mf.goWaitingRoom();	
